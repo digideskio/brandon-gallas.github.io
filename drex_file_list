@@ -35,7 +35,6 @@ de_search\0xu0033.txt
 de_search\0xu0032.txt
 de_search\0xu0031.txt
 de_search\0xu0030.txt
-de_search
 js\drexplain.data.index.js
 de_style.css
 css\printed.css
@@ -55,13 +54,6 @@ i\blocks\search\loading.gif
 i\blocks\interface-icons\interface-icons-sprite.png
 i\blocks\interface-icons\interface-icons-sprite-8.png
 i\null.gif
-i\blocks\work-zone
-i\blocks\tree
-i\blocks\splitter
-i\blocks\search
-i\blocks\interface-icons
-i\blocks
-i
 5__references.htm
 4_8_database.htm
 4_7_generate_a_report.htm
@@ -91,9 +83,7 @@ drex_4_3_input_data_custom.png
 2_1_variance_estimation.htm
 2__methods.htm
 1__introduction_to_roc_reader_studies.htm
-_.htm
+brief_description.htm
 drex_index_custom.png
 index.htm
-css
-js
 drex_file_list

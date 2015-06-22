@@ -2,8 +2,8 @@
  Ti... Advanced License is required!
  index.htm
 2
- ... Advanced License is required!
- _.htm
+ Brief De... Advanced License is required!
+ brief_description.htm
 3
  1. Introduction to... Advanced License is required!
  1__introduction_to_roc_reader_studies.htm
