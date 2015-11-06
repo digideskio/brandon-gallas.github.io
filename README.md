@@ -1,2 +1,2 @@
 # brandon-gallas.github.io
-Website for brandon gallas and his projects.
+This repository is for staying organized personally. I reserve all rights allowable by GitHub.
