@@ -1,0 +1,2443 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE>GE PFCS1NFCSS | Use and Care Manual</TITLE>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<LINK REL="stylesheet" TYPE="text/css" HREF="/css/style.css">
+<LINK REL="stylesheet" TYPE="text/css" HREF="/jslib/shadowbox/shadowbox.css">
+<LINK REL="stylesheet" TYPE="text/css" HREF="/css/autocomplete.css">
+
+<SCRIPT TYPE="text/javascript" SRC="/jslib/shadowbox/shadowbox.js"></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="/global.js"></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="/jslib/jquery-1.5.js"></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="/jslib/jquery.autocomplete.js"></SCRIPT>
+
+
+
+
+
+
+
+<SCRIPT TYPE="text/javascript">
+
+$(document).ready(function() {
+    $("#global_search_box").autocomplete('/search/search_ac.php', {
+        minChars: 2,
+        selectFirst: false,
+        scrollHeight: 300,
+        delay: 200,
+        matchSubset: false,
+        width: 300,
+        max: 15
+    }).result(function(event, item) {
+        var selectedattrs = item[1];
+        $.ajax({
+            url: '/search/search_ac.php',
+            dataType: 'json',
+            data: $.parseJSON(selectedattrs),
+            success: function (data) {
+                //console.log(data);
+                if (data.url) {
+                    location.href = data.url;
+                } else {
+                    document.getElementById('cse_form').submit();
+                }
+            }
+        });
+    });
+
+    
+});
+
+function manualQuickFindSelections(disable, enable, value) {
+
+    document.getElementById(disable).disabled=true;
+    document.getElementById(enable).disabled=false;
+    
+    //if (parent_option == '') return;
+    question_mark_test = (parent.location.href.indexOf('?') == -1) ? '?' : '&';
+    loadOptions({
+         select:   document.getElementById(enable),
+         options:  eval('('+getURL(location.href + question_mark_test + 'ajax_qf=1&op=get_options&selected='+escape(disable)+'&selection='+escape(value))+')')
+    });
+
+}
+
+</SCRIPT>
+
+
+<SCRIPT TYPE="text/javascript" SRC="/jslib/swfobject.js"></SCRIPT>
+<SCRIPT TYPE="text/javascript">
+
+var docViewer;
+var viewerLoaded = false;
+
+function getDocViewer(){
+    
+    if(docViewer) {
+        
+        return docViewer;
+        
+    } else if(window.fp) {
+        
+        return window.fp;
+        
+    } else if(document.fp) {
+        
+        return document.fp;
+        
+    }
+    console.log('no viewer!');
+    return null;
+    
+}
+
+/**
+ * Handles the event of external links getting clicked in the document. 
+ *
+ * @example onExternalLinkClicked("http://www.google.com")
+ *
+ * @param String link
+ */
+function onExternalLinkClicked(link){
+   //alert("link " + link + " clicked" );
+   //window.location.href = link;
+}
+
+/**
+ * Recieves progress information about the document being loaded
+ *
+ * @example onProgress( 100,10000 );
+ *
+ * @param int loaded
+ * @param int total
+ */
+function onProgress(loadedBytes,totalBytes){
+}
+
+/**
+ * Handles the event of a document is in progress of loading
+ *
+ */
+function onDocumentLoading(){
+}
+
+/**
+ * Receives messages about the current page being changed
+ *
+ * @example onCurrentPageChanged( 10 );
+ *
+ * @param int pagenum
+ */
+function onCurrentPageChanged(pagenum){
+    $('#viewer-thumbs').scrollTop($('#viewer-page-'+pagenum).attr('offsetTop') - $('#viewer-thumbs').offset().top);
+    //$('.viewer-thumb').removeClass('viewer-active-page');
+    //$('#viewer-page-'+pagenum+' a img').addClass('viewer-active-page');
+}
+
+/**
+ * Receives messages about the document being loaded
+ *
+ * @example onDocumentLoaded( 20 );
+ *
+ * @param int totalPages
+ */
+function onDocumentLoaded(totalPages){
+    viewerLoaded = true;
+}
+
+/**
+ * Receives error messages when a document is not loading properly
+ *
+ * @example onDocumentLoadedError( "Network error" );
+ *
+ * @param String errorMessage
+ */
+function onDocumentLoadedError(errMessage){
+}
+
+/**
+ * Receives error messages when a document has finished printed
+ *
+ * @example onDocumentPrinted();
+ *
+ */
+function onDocumentPrinted(){
+}
+
+
+function viewer_load_page(page) {
+    
+    //console.log('loading page '+page);
+    if (!viewerLoaded) {
+        
+        window.setTimeout('viewer_load_page('+page+')', 1000);
+        
+    } else {
+        
+        getDocViewer().gotoPage(page);
+        
+    }
+    
+}
+
+
+function load_viewable_thumbs() {
+    
+    var scrollTop = $('#viewer-thumbs').scrollTop();
+    var scrollHeight = $('#viewer-thumbs').attr('scrollHeight');
+    var divHeight = $('#viewer-thumbs').height();
+    var bottom = scrollTop + divHeight;
+    $('.viewer-thumb').each(function() {
+        if ($(this).attr('src').indexOf('manualpage.png') == -1) return;
+        var top = $(this).attr('offsetTop');
+        if ((top + 800) >= scrollTop && (top - 800) <= bottom) {
+            
+            if ($(this).attr('src').indexOf('manualpage.png') != -1) {
+                
+                var realsrc = $(this).attr('realsrc');
+                $(this).attr('src', realsrc);
+                
+            }
+            
+        }
+        
+    });
+};
+var swfviewerheight = 650;
+$(window).load(function() {
+    load_viewable_thumbs();
+    /*
+    var hash = location.hash.match(/#page(\d+)$/);
+    if (hash && hash.length) {
+        viewer_load_page(hash[1]);
+    }
+    */
+        $('#viewer-thumbs').scroll(load_viewable_thumbs);
+});
+$(document).ready(function() {
+    $('#viewer-thumbs').css('height', swfviewerheight);
+});
+
+
+
+//$(document).ready(function() {
+    var swfVersionStr = "10.0.0";
+    var xiSwfUrlStr = "";
+    var flashvars = {
+        SwfFile: escape('/manualswf.php?id=174595&manual_type=product&d=f2a5694a7624d9d8a7148067ad91ec54'),
+        Scale: 0.6, 
+        ZoomTransition: "easeOut",
+        ZoomTime: 0.5,
+        ZoomInterval: 0.1,
+        FitPageOnLoad: false,
+        FitWidthOnLoad: true,
+        PrintEnabled: true,
+        FullScreenAsMaxWindow: true,
+        ProgressiveLoading: true,
+        PrintToolsVisible: true,
+        ViewModeToolsVisible: true,
+        ZoomToolsVisible: true,
+        FullScreenVisible: true,
+        NavToolsVisible: true,
+        CursorToolsVisible: true,
+        SearchToolsVisible: true,
+        localeChain: "en_US",
+        key: "$4e853cde4f056f394ea"
+    };
+    
+    var params = {
+        quality: 'high',
+        bgcolor: '#ffffff',
+        allowscriptaccess: 'sameDomain',
+        allowfullscreen: true
+    };
+    var attributes = {
+        id: 'fp',
+        name: 'fp'
+    };
+    // determine optimal height
+    swfviewerheight = $(window).height();
+    var vertadjust = 25;
+    swfviewerheight -= vertadjust
+    if (swfviewerheight > (1000 + vertadjust)) swfviewerheight = 1000;
+    if (swfviewerheight < 600) swfviewerheight = 600;
+    //console.log(swfviewerheight);
+    swfobject.embedSWF(
+        '/swfviewer/viewer.php',
+        'viewer-swf',
+        '790', swfviewerheight,
+        swfVersionStr, xiSwfUrlStr, 
+        flashvars, params, attributes);
+    swfobject.createCSS('#viewer-swf', 'display:block;text-align:left;');
+//});
+
+</SCRIPT>
+
+
+<SCRIPT TYPE="text/javascript" SRC="/jslib/jquery.cookie.js"></SCRIPT>
+
+<SCRIPT TYPE="text/javascript">
+
+
+$(document).ready(function() {
+
+    var referrer_details = detect_referrer_details();
+    if (referrer_details && referrer_details.search && !$.cookie('incsrch')) {
+        var encoded_search = encodeURIComponent(referrer_details.search);
+        $.cookie('incsrch', encoded_search, { path: '/' });       
+    }
+
+    if($.cookie('incsrch')) {        
+        $('#listingHeadingRight').addClass("helpOwlBox");
+        $('#listingHeadingRight').css("text-align", "left");
+        var helpBox = '<div class="helpOwlBoxHeader">Have a Question?</div>';
+        helpBox += 'We have many experts in our community waiting to answer your question for <b>free!</b>';
+        helpBox += '<p>Your search for <span class="highlight"><b>' + decodeURIComponent($.cookie('incsrch')) + '</b></span> will be posted to our sister-site, HelpOwl.com, which is a community of experts answering questions <b>completely for free</b>.';
+        helpBox += '<FORM ACTION="https://www.helpowl.com/post_question_product.php?product=' + 179483 + '&referral=mo&question=' + encodeURIComponent($.cookie('incsrch')) + '" METHOD="post" TARGET="_blank"';
+        helpBox += '<DIV STYLE="text-align:center;"><INPUT TYPE="image" SRC="/images/button_ask_a_question.gif"></DIV>';
+        helpBox += '</FORM>'
+        $('#listingHeadingRight').html(helpBox);
+    }    
+
+});
+
+
+</SCRIPT>
+
+<style>
+#viewer {
+    width:950px;
+}
+
+#viewer-thumbs {
+    height: 700px;
+    width: 150px;
+    overflow-y: auto;
+    float:left;
+}
+
+#viewer-related {
+    float:right;
+    width: 790px;
+}
+
+#viewer-swf {
+}
+
+#viewer-ad-right {
+    /*left:949px;
+    float:right;
+    margin-left:10px;
+    height:0px;
+    width:0px;
+    */
+    position:relative;
+    left:950px;
+    bottom:0px;
+    height:0px;
+    width:0px;
+}
+
+#viewer-ad-left {
+    position:relative;
+    left:-169px;
+    bottom:-100px;
+    height:0px;
+    width:0px;
+}
+
+#viewer-ad-top {
+    text-align:center;
+    margin:0 0 6px 0;
+    /*background-color:#DEDEDE;*/
+    width:937px;
+}
+
+#viewer-ad-bottom{
+    text-align:center;
+    margin:6px 0 0 0;
+    /*background-color:#DEDEDE;*/
+    width:937px;
+}
+
+.viewer-thumb {
+    width: 125px;
+    height: 175px;
+    border: 1px solid #ccc;
+    margin-bottom:5px;
+}
+
+.viewer-thumb-active {
+    width: 125px;
+    border: 1px solid #000;
+    margin-bottom:5px;
+}
+
+.viewer-active-page {
+    border:1px red solid;
+}
+</style>
+</HEAD>
+<BODY>
+
+<DIV ID="topNav">
+
+    <DIV CLASS="wrapper">
+    
+        <DIV ID="logo">
+        
+            <A HREF="/index.php"><IMG SRC="/images/cochise_logo.gif" ALT="Return to ManualOwl.com Home Page"></A>
+            
+        </DIV>
+
+        <DIV ID="topSearch">
+        
+            <FORM ID="cse_form" ACTION="/search_results.php">
+                <INPUT TYPE="hidden" NAME="cref" VALUE="https://www.manualowl.com/search/cse_context.php" />
+                <INPUT TYPE="hidden" NAME="cof" VALUE="FORID:11" />
+                <DIV ID="field">
+                  <INPUT TYPE="text" NAME="q" ID="global_search_box" CLASS="textfield" />
+                </DIV>
+                <DIV ID="submitButton">
+                  <INPUT TYPE="image" SRC="/images/top_submit_button.gif" VALUE="Submit" CLASS="button">
+                </DIV>
+            </FORM>
+            <SCRIPT TYPE="text/javascript" SRC="https://cse.google.com/brand?form=cse_form"></SCRIPT>
+            
+        </DIV>
+
+        <DIV ID="nav">
+        
+            <A HREF="/index.php">Home</A> |
+            <A HREF="/account_home.php">My Manuals</A> |
+            <A HREF="/company_index.php">Manual Index</A> |
+            <A HREF="/manual_categories.php">Manual Categories</A>            
+            
+        </DIV>
+
+        <DIV CLASS="clear"></DIV>
+        
+    </DIV>
+    
+</DIV>
+
+<DIV ID="contentContainer">
+
+    <DIV CLASS="wrapper">
+    
+        <DIV ID="mainContentContainer">
+
+            
+            <DIV ID="topBreadCrumb">
+
+                <DIV CLASS="left">
+
+                    <DIV>
+
+                        <DIV STYLE="float:left;">
+                            <DIV STYLE="padding-right:3px;"><g:plusone size="small" count="false"></g:plusone></DIV>
+                        </DIV>
+
+                        <DIV STYLE="float:left;">
+                            <A HREF="/index.php">Home</A>
+
+                                                            > <a href="/General%20Electric/Manuals">GE Manuals</a>                                                            > <a href="/c/General%20Electric/Refrigerator/Manuals">Refrigerators</a>                                                            > <a href="/p/General%20Electric/PFCS1NFCSS/Manual/179483">GE PFCS1NFCSS</a>                                                            > Manual Viewer                                                    </DIV>
+
+                        <DIV CLASS="clear"></DIV>
+
+                    </DIV>
+
+                </DIV>
+            
+            </DIV>
+    
+            
+
+    <DIV ID="listingHeadingLeft" STYLE="width:390px;">
+
+    <H1 CLASS="questionH1">GE PFCS1NFCSS Use and Care Manual</H1>
+    <H2>GE PFCS1NFCSS Manual</H2>
+
+    <P>
+
+    <DIV ID="productSummary">
+
+        <DIV CLASS="image">
+            <IMG SRC="/images/products_thumb/general-electric-pfcs1nfcss.jpg" ALT="Get GE PFCS1NFCSS manuals and user guides">
+        </DIV>
+
+        <DIV CLASS="text" STYLE="width:260px;">
+                    
+                            
+            <A HREF="/p/General%20Electric/PFCS1NFCSS/Manual/179483" TITLE="Free GE PFCS1NFCSS pdf manuals">Free GE PFCS1NFCSS manuals!</A>
+            
+        </DIV>
+
+        <DIV CLASS="clear"></DIV>
+        
+    </DIV>
+
+            
+    <p></p>
+    <DIV ID="breadcrumbBox" STYLE="width:340px;">
+    <DIV STYLE="float:left;width:30px;">
+        <A HREF="/account_home.php?ns=322038&ns_type=product"><IMG SRC="/images/icons/blue_folder.gif" TITLE="Add this item to your list of saved products!"></A>
+    </DIV>
+
+    <DIV STYLE="float:left;width:305px;padding-top:0px;">
+        <A HREF="/account_home.php?ns=322038&ns_type=product">Add to My Manuals!</A><BR>
+        Save this manual to your list of manuals</A>
+    </DIV>
+
+    <DIV CLASS="clear"></DIV>
+    </DIV>
+                    
+</DIV>
+
+<DIV ID="listingHeadingRight" STYLE="width:550px;text-align:left;">
+
+    
+        <DIV ID="manualToc" style="overflow-y:scroll;height:150px;padding:2px 5px 10px 5px;border:1px solid #CECECE;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;"><DIV STYLE='text-align:center;'><H3>GE PFCS1NFCSS manual table of contents:</H3></DIV><ul><li><A HREF="?page=1">GE PFCS1NFCSS | Use and Care Manual - Page 1</A><BR>GEAppliances.com
+
+Refrigerators
+
+Bottom Freezer
+
+Safety Instructions ...2, 3 Operating Instructions
+
+Owner's Manual and ...26 Reversing the Door Swing (Single Door Refrigerator Models only) ...27-29 Removing ...right side, near the top of the refrigerator compartment.
+
+200D9366P019 49-60609-2 04-10 GE</li><li><A HREF="?page=2">GE PFCS1NFCSS | Use and Care Manual - Page 2</A><BR>...€™s Manual.
+
+SAFETY PRECAUTIONS
+When using electrical appliances, basic safety precautions should be followed, including the following:
+n This refrigerator must be ... rid of your old refrigerator, please follow the instructions below to help prevent accidents.
+
+Troubleshooting Tips
+
+Refrigerants
+All ...</li><li><A HREF="?page=3">GE PFCS1NFCSS | Use and Care Manual - Page 3</A><BR>Safety Instructions
+
+GEAppliances.com
+
+WARNING!
+HOW TO CONNECT ELECTRICITY
+Do not, under any circumstances,... wall outlet. The refrigerator should always be plugged into its own individual electrical outlet... from overheated wires. Never unplug your refrigerator by pulling on the power cord. Always grip...</li><li><A HREF="?page=4">GE PFCS1NFCSS | Use and Care Manual - Page 4</A><BR>... but does not shut off electrical power to the refrigerator. Changing the Temperature
+For Controls-on-the-Door Models:
+To change the temperature,... in both the freezer and refrigerator compartments, but does not shut off electrical power to the refrigerator.
+
+Consumer Support
+
+For Controls Inside the ...</li><li><A HREF="?page=5">GE PFCS1NFCSS | Use and Care Manual - Page 5</A><BR>About TurboCool.&#8482; (on some models)
+How It Works
+TurboCool rapidly cools the refrigerator compartment in order to more quickly cool foods. ... models)
+
+About Energy Saver (on some models)
+This product is equipped with an Energy Saver feature. The refrigerator is shipped with the Energy Saver feature ...</li><li><A HREF="?page=6">GE PFCS1NFCSS | Use and Care Manual - Page 6</A><BR>...
+The water filter cartridge is located in the back upper right corner of the refrigerator compartment.
+
+Filter Bypass Plug
+You must use the filter ... in the United States, visit our Website, GEAppliances.com, or call GE Parts and Accessories, 800.626.2002. Filter Model MWF Customers in Canada should ...</li><li><A HREF="?page=7">GE PFCS1NFCSS | Use and Care Manual - Page 7</A><BR>About the shelves and bins.
+Not all features are on all models.
+
+Safety Instructions
+
+GEAppliances.com
+
+Rearranging the Shelves
+Shelves in the refrigerator compartment are adjustable.
+
+Refrigerator Compartment
+To remove: Remove all items from the shelf. ...</li><li><A HREF="?page=8">GE PFCS1NFCSS | Use and Care Manual - Page 8</A><BR>... Door
+Adjustable bins can easily be carried from refrigerator to work area. To remove: Lift bin straight...Caddy
+
+Troubleshooting Tips
+
+Caddy
+
+The optional freezer caddy fits over the front edge of the bottom ...features.
+Not all features are on all models.
+
+Consumer Support
+
+Non-Adjustable Beverage Rack
+...</li><li><A HREF="?page=9">GE PFCS1NFCSS | Use and Care Manual - Page 9</A><BR>... pans.
+Not all features are on all models.
+
+Safety Instructions
+
+GEAppliances.com
+
+Fruit and Vegetable ... be wiped dry.
+
+Operating Instructions
+
+Adjustable Humidity Crisper (on some models)
+Slide the control ....
+
+Adjustable Temperature Deli Pan (on some models)
+Slide the control all the way to the left ...</li><li><A HREF="?page=10">GE PFCS1NFCSS | Use and Care Manual - Page 10</A><BR>Safety Instructions
+
+About the freezer.
+Not all features are on all models.
+
+Freezer Shelves and ... locks from verticall to horizontal position. Open the refrigerator doors. Lift the basket up and ... edge of the bottom freezer basket. Push down to secure.
+
+Troubleshooting Tips
+
+Installation Instructions...</li><li><A HREF="?page=11">GE PFCS1NFCSS | Use and Care Manual - Page 11</A><BR>....
+
+Icemaker Accessory Kit
+If your refrigerator did not come already equipped .... Check the back of the refrigerator for the specific icemaker kit needed for your model.
+
+Troubleshooting Tips... Dispenser (on some models)
+The water dispenser is located on the left wall inside the refrigerator compartment....</li><li><A HREF="?page=12">GE PFCS1NFCSS | Use and Care Manual - Page 12</A><BR>...steel panels and door handles. Stainless steel (on some models) can be cleaned with a commercially..., leave an open box of baking soda in the refrigerator and freezer compartments. After cleaning... scrub with steel-wool pads or other abrasive cleaners.
+
+Installation Instructions
+
+Unplug the refrigerator...</li><li><A HREF="?page=13">GE PFCS1NFCSS | Use and Care Manual - Page 13</A><BR>... against the hand truck. This could damage the refrigerator. Handle only from the sides of the refrigerator. Be sure the refrigerator stays in an upright position during moving.
+
+Troubleshooting Tips Consumer Support
+13</li><li><A HREF="?page=14">GE PFCS1NFCSS | Use and Care Manual - Page 14</A><BR>... of the same or lower wattage, replace the shield. Plug the refrigerator back in. NOTE: Appliance bulbs may be ordered from GE Parts and Accessories, 800.626.2002.
+
+Unplug the refrigerator.
+
+Operating Instructions
+
+To remove the light shield, grasp the...</li><li><A HREF="?page=15">GE PFCS1NFCSS | Use and Care Manual - Page 15</A><BR>... kits and decorator panels.
+For panel-required models Read these instructions completely and carefully.
+
+Safety Instructions
+
+GEAppliances.com
+
+Before You Begin
+Some models are equipped with trim kits ... pre-cut black or white decorator panels from GE Parts and Accessories, 800.626.2002,...</li><li><A HREF="?page=16">GE PFCS1NFCSS | Use and Care Manual - Page 16</A><BR>...mm) max Appearance Panel 3/4&#8243; (19 mm) 3/4&#8243; (19 mm) Refrigerator Door
+
+Dimensions for Custom Wood Panels
+
+Installation Instructions
+
+1/8&#8243; (3 mm)
+
+Left Fresh... mm) thickness Top, right and bottom 38 15/16&#8243; (98.9 cm)
+
+1/4&#8243; (6 mm)
+
+Troubleshooting Tips
+
+Raised portion of panel
+
+...</li><li><A HREF="?page=17">GE PFCS1NFCSS | Use and Care Manual - Page 17</A><BR>... instructions completely and carefully  inspector's use.
+
+Refrigerator
+Models 21 and 25
+
+Questions? Call 800.GE.CARES (800.432.2737) or ... AND DISPENSER (ON SOME MODELS) If the refrigerator has an icemaker, it will have to be connected to a cold water line. A GE water supply kit (containing tubing, ...</li><li><A HREF="?page=18">GE PFCS1NFCSS | Use and Care Manual - Page 18</A><BR>... BRACKET (on 21 ft. models)
+WARNING
+2 LOCATING THE ANTI-TIP
+
+FLOOR BRACKET
+
+Under certain circumstances, this refrigerator can tip forward. ...wall, within W, and in line with the desired location of the RH side of the refrigerator (see Figure 1).
+
+Figure 1 - Installation Overview
+Floor - Concrete ...</li><li><A HREF="?page=19">GE PFCS1NFCSS | Use and Care Manual - Page 19</A><BR>...
+
+Minimum Acceptable #3 - Concrete Floor
+
+4 POSITIONING THE REFRIGERATOR
+
+TO ENGAGE THE ANTI-TIP FLOOR AND ... Floor Bracket Wall
+
+A Before pushing the refrigerator into the opening, plug the power cord ... the anti-tip floor bracket is engaged when the refrigerator is pushed back against the rear wall....</li><li><A HREF="?page=20">GE PFCS1NFCSS | Use and Care Manual - Page 20</A><BR>... mm)
+
+REMOVE TOP CAP (on some models)
+&#8226; IMPORTANT NOTE: This refrigerator is 34-1/2&#8243; deep. ...Top Hinge B
+
+1 CONNECTING THE REFRIGERATOR TO
+
+THE HOUSE WATER LINE
+
+(icemaker and dispenser models)
+A cold ... it in the water line near the refrigerator. If using GE SmartConnect&#8482; Refrigerator Tubing Kit,...</li><li><A HREF="?page=21">GE PFCS1NFCSS | Use and Care Manual - Page 21</A><BR>... from the house cold water supply. If you are using the GE SmartConnect&#8482; tubing, the nuts are already assembled to the tubing....While holding the tubing, tighten the fitting. If you are using GE SmartConnect&#8482; tubing, insert the molded end of the tubing into the refrigerator connection, at the back...</li><li><A HREF="?page=22">GE PFCS1NFCSS | Use and Care Manual - Page 22</A><BR>... Instructions INSTALLING THE REFRIGERATOR (cont.)
+6 REMOVE THE FRESH FOOD 7 REMOVE THE FREEZER DOOR HANDLE
+Stainless steel and plastic handles: A Loosen the ... installation location or reversal of the handles - on some models)
+Stainless steel (on some models): A REMOVING THE DOOR HANDLE: ...</li><li><A HREF="?page=23">GE PFCS1NFCSS | Use and Care Manual - Page 23</A><BR>Installation Instructions
+9 ATTACH THE FREEZER DOOR HANDLE
+Stainless steel and plastic handles: A Attach the handle firmly to the ...or 3/32&#8243; Allen wrench.
+
+8 ATTACH THE FRESH FOOD
+
+DOOR HANDLE
+
+Stainless steel handle: A Attach the handle to the handle mounting fasteners and ...</li><li><A HREF="?page=24">GE PFCS1NFCSS | Use and Care Manual - Page 24</A><BR>Installation Instructions INSTALLING THE REFRIGERATOR (cont.)
+10 LEVEL THE REFRIGERATOR
+The leveling legs have 2 purposes: 1) ... onto drawer slides. See About the freezer section for instructions. B Turn the leveling legs clockwise to raise the refrigerator, counterclockwise to lower it. Set the ...</li><li><A HREF="?page=25">GE PFCS1NFCSS | Use and Care Manual - Page 25</A><BR>..., after removing the freezer drawer and refrigerator door, the refrigerator will still not fit through a ... swing locks from vertical to horizontal position. Open refrigerator doors. F Lift the basket up and ... rail assembly. B Tilt the drawer front toward the refrigerator and lift out.
+
+Rail assembly
+
+...</li><li><A HREF="?page=26">GE PFCS1NFCSS | Use and Care Manual - Page 26</A><BR>Installation Instructions REPLACING THE FREEZER DRAWER (on some models)
+Two people may be required ...and two slots on each rail assembly on the refrigerator. Align the drawer rails with the rail assemblies, tilt the drawer toward the refrigerator, and seat the tabs into the slots of the rail assembly....</li><li><A HREF="?page=27">GE PFCS1NFCSS | Use and Care Manual - Page 27</A><BR>Installation Instructions REVERSING THE DOOR SWING (Single Door Refrigerator Models only)
+IMPORTANT ... swing is not reversible on stainless steel models. &#8226; Read the instructions all the way through... badge is included in the hinge kit. Unplug the refrigerator from its electrical outlet. Empty all door...</li><li><A HREF="?page=28">GE PFCS1NFCSS | Use and Care Manual - Page 28</A><BR>.... Set the hinge and bolts aside.
+
+4 TRANSFER REFRIGERATOR
+
+DOOR STOP
+
+A B C
+
+Remove the door stop on right side of the bottom of the refrigerator door by removing the two screws. Move ... cover in the hinge holes on the left side to the right side.
+A
+
+Bottom of Refrigerator Door (Right Side)
+
+...</li><li><A HREF="?page=29">GE PFCS1NFCSS | Use and Care Manual - Page 29</A><BR>Installation Instructions
+6 REHANG REFRIGERATOR DOOR
+A Lower the refrigerator door onto the center hinge pin. Ensure that the plastic hinge pin thimble is on ... the top hinge pin into the hinge hole on top of the refrigerator door. Make sure the door is aligned with the cabinet. ...</li><li><A HREF="?page=30">GE PFCS1NFCSS | Use and Care Manual - Page 30</A><BR>... doors. IMPORTANT: Once you begin, do not move the cabinet. These instructions are for removing the doors. Unplug the refrigerator from its electrical outlet. Empty all door shelves, including the dairy compartment.
+
+1 REMOVE THE REFRIGERATOR DOORS
+...</li><li><A HREF="?page=31">GE PFCS1NFCSS | Use and Care Manual - Page 31</A><BR>Installation Instructions
+1 REMOVE THE REFRIGERATOR 2 REMOVE CENTER HINGE
+Using a 5/16&#8243; socket ratchet/... (cont.)
+
+D Remove the hinge cover on top of the refrigerator door by removing the Phillips-head screws ... door hinge pin hole located in the bottom of the door.
+
+G Set the door on a non-scratching...</li><li><A HREF="?page=32">GE PFCS1NFCSS | Use and Care Manual - Page 32</A><BR>Installation Instructions REPLACING THE DOORS (Double Door Refrigerator Models only)
+1 INSTALL CENTER HINGE
+Install the center hinge on each side.
+
+2 REHANG REFRIGERATOR DOORS (CONT.)
+E Make sure the gasket on the door is flush against the cabinet and is not folded. Make ...</li><li><A HREF="?page=33">GE PFCS1NFCSS | Use and Care Manual - Page 33</A><BR>..., WX08X10015 and WX08X10025). When connecting your refrigerator to a GE Reverse Osmosis Water System,...) in house plumbing can cause damage to refrigerator parts and lead to water leakage ... out from the wall after installation. GE SmartConnect&#8482; Refrigerator Tubing Kits are available in the following ...</li><li><A HREF="?page=34">GE PFCS1NFCSS | Use and Care Manual - Page 34</A><BR>... GE approved plastic tubing is that supplied in GE SmartConnect&#8482; Refrigerator Tubing kits. Do not use... water valve. OR &#8226; If you are using a GE SmartConnect&#8482; Refrigerator Tubing kit, the necessary fittings are...Do not cut formed end from GE SmartConnect&#8482; Refrigerator tubing.
+
+&#8226; Shut-off valve ...</li><li><A HREF="?page=35">GE PFCS1NFCSS | Use and Care Manual - Page 35</A><BR>... be adhered to. Saddle valves are illegal and use is not permitted in Massachusetts. Consult with your licensed plumber.
+
+For plastic tubing from a GE SmartConnect&#8482; Refrigerator Tubing kit, insert the molded end of the tubing into the shut-off ...</li><li><A HREF="?page=36">GE PFCS1NFCSS | Use and Care Manual - Page 36</A><BR>... and longer
+
+Operating Instructions
+
+than your old refrigerator and you may ... plugged in. This happens as the refrigerator cools to the correct temperature. compressor.
+
+Installation Instructions
+
+n The freezer control ... may not need to call for service. Problem
+Refrigerator does not operate
+
+Possible...</li><li><A HREF="?page=37">GE PFCS1NFCSS | Use and Care Manual - Page 37</A><BR>...
+
+What To Do
+&#8226; Wait 24 hours for the refrigerator to completely cool down. &#8226; This is normal.
+
+Operating Instructions
+
+&#8226; Check to see if package is holding ... line. &#8226;Wait 24 hours for the refrigerator to completely cool down. &#8226;Level cubes by hand.
+
+Consumer Support
+
+&#8226;Turn off the icemaker, ...</li><li><A HREF="?page=38">GE PFCS1NFCSS | Use and Care Manual - Page 38</A><BR>... left open. Freezer control not set cold enough.
+
+Refrigerator has odor
+
+Foods transmitting odor to refrigerator. ... does not close by itself, above.
+
+Consumer Support
+
+Troubleshooting Tips
+
+Food freezing in the refrigerator
+
+&#8226; Move the food away from the air vent. &#8226;Move the refrigerator control ...</li><li><A HREF="?page=39">GE PFCS1NFCSS | Use and Care Manual - Page 39</A><BR>Safety Instructions
+
+GEAppliances.com
+
+Problem
+Water has poor taste/odor Water in first ... in system is replenished. &#8226; Wait 24 hours for the refrigerator to completely cool down. &#8226; Dispense water... the dispenser arm for at least 2 minutes. &#8226;Set the refrigerator control to a warmer setting and wait...</li><li><A HREF="?page=40">GE PFCS1NFCSS | Use and Care Manual - Page 40</A><BR>... need realigning. &#8226;See Align Double Doors section located under Replacing the Door (Double Door Refrigerator Models only).
+
+Consumer Support
+
+Troubleshooting Tips
+
+Refrigerator doors are not even (on Double Door models only)
+
+40</li><li><A HREF="?page=41">GE PFCS1NFCSS | Use and Care Manual - Page 41</A><BR>... warranty.
+
+Safety Instructions
+
+For The Period Of: GE Will Replace:
+GE and GE PROFILE MODELS: One Year...replacement water filter cartridge.
+
+Operating Instructions
+
+GE PROFILE MODELS ONLY: Five Years (GE Profile models only) From the date of the original purchase Any part of the sealed refrigerating ...</li><li><A HREF="?page=42">GE PFCS1NFCSS | Use and Care Manual - Page 42</A><BR>...Replace at Mabe's Option Labour
+
+CUSTOMER WARRANTY
+
+Compressor
+
+GE Profile: Ten (10) Years... Other GE and All Other GE and All Other Brands: One (1) Year Brands: One (1) Year Brands: One (1) Year GE Profile: Five... One (1) Year
+
+Sealed System (including GE Profile: Five (5) Years evaporator, condenser...</li><li><A HREF="?page=43">GE PFCS1NFCSS | Use and Care Manual - Page 43</A><BR>...€“100&#186;F (0.6&#8211;38&#186;C) n Flow rate: 0.5 gpm (1.9 lpm)
+n
+
+General Installation/Operation/Maintenance Requirements
+n n n n n
+
+Run 11/2 gallons ... Unit Turbidity Reduction Cyst and Asbestos Reduction Manufactured for: General Electric Company, Louisville, KY 40225 EPA EST. No. 070595-MN-001
+
+NSF
+
+&#174;
+
+43</li><li><A HREF="?page=44">GE PFCS1NFCSS | Use and Care Manual - Page 44</A><BR>... Health Services
+
+Water Treatment Device Certificate Number 05 - 1698
+Date Issued: February 2, 2005
+
+Trademark/Model Designation MWF Manufacturer: General Electric Company
+
+Replacement Elements MWF
+
+The water treatment device(s) listed on this certi cate have...</li><li><A HREF="?page=45">GE PFCS1NFCSS | Use and Care Manual - Page 45</A><BR>... de panneaux d&#233;coratifs ...59, 60 Installation de la conduite d'eau ...77-79 Installation du r&#233;frig&#233;rateur ...64-68 Installation du support de sol anti-basculement ...62, 63 Pr&#233;paration ...61 Remise en place du tiroir du compartiment cong&#233;lation ...70 Bruits normaux de fonctionnement ......</li><li><A HREF="?page=46">GE PFCS1NFCSS | Use and Care Manual - Page 46</A><BR>Mesures de s&#233;curit&#233;
+
+MESURES DE S&#201;CURIT&#201; IMPORTANTES. LISEZ D'ABORD TOUTES LES DIRECTIVES.
+N'utilisez cet &#233;lectrom&#233;nager que pour l'usage auquel il est destin&#233;, comme expliqu&#233; dans le pr&#233;sent manuel.
+
+AVERTISSEMENT!
+
+MESURES DE S&#201;CURIT&#201;
+Lorsque vous utilisez un appareil &#233;lectrique...</li><li><A HREF="?page=47">GE PFCS1NFCSS | Use and Care Manual - Page 47</A><BR>Mesures de s&#233;curit&#233;
+
+www.electromenagersge.ca
+
+AVERTISSEMENT!
+RACCORDEMENT &#201;LECTRIQUE
+Ne coupez ni retirez en aucun cas la troisi&#232;me broche (mise &#224; la terre) de la fiche du cordon d'alimentation. Pour votre s&#233;curit&#233;, cet appareil doit &#234;tre correctement mis &#224; la terre.
+Le cordon d'...</li><li><A HREF="?page=48">GE PFCS1NFCSS | Use and Care Manual - Page 48</A><BR>Mesures de s&#233;curit&#233;
+
+Les commandes avec r&#233;glages de temp&#233;rature. (pour les autres mod&#232;les, consultez les pages suivantes)
+
+(Sur certains mod&#232;les)
+
+Fonctionnement
+
+(Sur certains mod&#232;les)
+
+Installation
+
+NOTE : Le r&#233;frig&#233;rateur est exp&#233;di&#233; avec une pellicule de protection couvrant les ...</li><li><A HREF="?page=49">GE PFCS1NFCSS | Use and Care Manual - Page 49</A><BR>Mesures de s&#233;curit&#233;
+
+Au sujet de TurboCool.&#8482; (sur certains mod&#232;les)
+Fonctionnement
+La commande TurboCool acc&#233;l&#232;re le refroidissement du compartiment r&#233;frig&#233;ration afin de refroidir plus rapidement les aliments. Utilisez TurboCool quand vous ajoutez une grande quantit&#233; d'aliments dans le...</li><li><A HREF="?page=50">GE PFCS1NFCSS | Use and Care Manual - Page 50</A><BR>.... Filtres de remplacement : Pour commander des cartouches suppl&#233;mentaires, visitez notre site Web &#224; l'adresse www.electromenagersge.ca, ou appelez le Service des pi&#232;ces et accessoires au 888.261.3055. Mod&#232;le de filtre MWF Les clients au Canada devraient consulter les pages jaunes pour conna&#238;...</li><li><A HREF="?page=51">GE PFCS1NFCSS | Use and Care Manual - Page 51</A><BR>Mesures de s&#233;curit&#233;
+
+Les clayettes et les balconnets.
+Toutes les caract&#233;ristiques ne sont pas disponibles sur tous les mod&#232;les.
+
+www.electromenagersge.ca
+
+Mise en place des clayettes
+Les clayettes du r&#233;frig&#233;rateur sont r&#233;glables.
+
+Compartiment r&#233;frig&#233;ration
+Enl&#232;vement : Enlevez tous les ...</li><li><A HREF="?page=52">GE PFCS1NFCSS | Use and Care Manual - Page 52</A><BR>... l'emplacement recherch&#233; et remettez-le en place selon les instructions ci-dessus.
+
+Installation
+
+Languettes
+
+Conseils de d&#233;pannage
+
+Support facultatif
+Support
+
+Le sac &#224; ...ajout&#233; si besoin. Pour le retirer : Soulevez le sac &#224; support vers le hauts.
+
+Pour le remettre en place :...</li><li><A HREF="?page=53">GE PFCS1NFCSS | Use and Care Manual - Page 53</A><BR>Bacs &#224; rangement et bacs &#224; l&#233;gume.
+Tous les mod&#232;les n'ont pas toutes ces caract&#233;ristiques.
+
+Mesures de s&#233;curit&#233;
+
+www.electromenagersge.ca
+
+Bacs &#224; fruits et l&#233;gumes
+Vous devez bien essuyer toute eau en exc&#232;s qui peut s'accumuler au fond des bacs ou en dessous des bacs.
+
+Fonctionnement...</li><li><A HREF="?page=54">GE PFCS1NFCSS | Use and Care Manual - Page 54</A><BR>... son arr&#234;t complet. Soulevez le sac &#224; support vers le hauts. Tirez la s&#233;... fentes d'&#233;vent arri&#232;re. Abaissez le support en vous assurant que le crochet ...du panier pour le lib&#233;rer des guides. Soulevez l'arri&#232;re du panier et sortez-le des guides.
+
+Assurez-vous toujours de bien fermer le panier....</li><li><A HREF="?page=55">GE PFCS1NFCSS | Use and Care Manual - Page 55</A><BR>Mesures de s&#233;curit&#233;
+
+Machine &#224; gla&#231;ons automatique.
+Commutateur de marche Machine &#224; gla&#231;ons
+
+www.electromenagersge.ca
+
+Il faut pr&#233;voir entre 12 et 24 heures avant qu'un r&#233;frig&#233;rateur nouvellement install&#233; commence &#224; produire des gla&#231;ons.
+
+Machine &#224; gla&#231;ons automatique
+(sur certains ...</li><li><A HREF="?page=56">GE PFCS1NFCSS | Use and Care Manual - Page 56</A><BR>Mesures de s&#233;curit&#233;
+
+Entretien et nettoyage de votre r&#233;frig&#233;rateur.
+Nettoyage de l'ext&#233;rieur
+Les poign&#233;es de porte et les garnitures. Nettoyez avec un linge tremp&#233; dans de l'eau savonneuse. S&#233;chez avec un linge doux. N'appliquez pas de cire sur les poign&#233;es et les garnitures de porte...</li><li><A HREF="?page=57">GE PFCS1NFCSS | Use and Care Manual - Page 57</A><BR>... rouler sur le cordon d'alimentation ou sur la conduite d'eau de la machine &#224; gla&#231;ons (sur certains mod&#232;les) et assurezvous que le support du m&#233;canisme antibasculement soit engag&#233; (si votre r&#233;frig&#233;rateur est ainsi &#233;quip&#233;).
+
+Fonctionnement
+
+D&#233;part en vacances
+Lorsque vous vous absentez ...</li><li><A HREF="?page=58">GE PFCS1NFCSS | Use and Care Manual - Page 58</A><BR>...©rateur. NOTE : Vous pouvez commander des ampoules pour appareils &#233;lectrom&#233;nagers en t&#233;l&#233;phonant au service de pi&#232;ces et accessoires GE, au 1.800.661.1616.
+
+Fonctionnement
+
+Pour enlever le pare-lumi&#232;re, saisissez l&#8217;arri&#232;re de le ...</li><li><A HREF="?page=59">GE PFCS1NFCSS | Use and Care Manual - Page 59</A><BR>... des panneaux de porte. Vous pouvez commander des panneaux d&#233;coratifs pr&#233;d&#233;coup&#233;s blancs ou noirs au service de pi&#232;ces et accessoires GE, en t&#233;l&#233;phonant au 800.661.1616 ou vous pouvez ajouter des panneaux en bois allant avec ...</li><li><A HREF="?page=60">GE PFCS1NFCSS | Use and Care Manual - Page 60</A><BR>Mesures de s&#233;curit&#233; Fonctionnement
+
+Ensembles de moulures et de panneaux d&#233;coratifs.
+Panneaux de 19 mm (3/4 po) ou en relief
+Vous pouvez utiliser un motif de panneau en relief viss&#233; ou coll&#233; &#224; un panneau &#233;pais de 6 mm (1/4 po) ou un panneau toupill&#233; de 19 mm (3/4 po). La partie en relief du...</li><li><A HREF="?page=61">GE PFCS1NFCSS | Use and Care Manual - Page 61</A><BR>... les directives attentivement. &#8226; &#8226; &#8226; &#8226; &#8226; &#8226; &#8212; Conservez ces instructions pour l&#8217;inspecteur local. &#8212; Respectez ...€™installateur &#8211; Assurez-vous de laisser ces instructions au consommateur. Note au consommateur... trousse d&#8217;alimentation d&#8217;eau GE (contenant la tuyauterie, le robinet d&#2862;.</li><li><A HREF="?page=62">GE PFCS1NFCSS | Use and Care Manual - Page 62</A><BR>Instructions d'installation
+OUTILS DONT VOUS POUVEZ AVOIR BESOIN (SUITE)
+Tourne-&#233;crou ... mod&#232;les de 21 pi)
+AVERTISSEMENT
+2 POSITIONNEMENT DU SUPPORT DE
+
+SOL ANTI-BASCULEMENT
+
+Dans certaines conditions... Sol - ciment (2 trous) Sol - bois (2 trous) Support de sol &#224; installer Trous &#224; droite
+18,4 ...</li><li><A HREF="?page=63">GE PFCS1NFCSS | Use and Care Manual - Page 63</A><BR>Instructions d'installation
+2 POSITIONNEMENT DU SUPPORT DE
+
+SOL ANTI-BASCULEMENT (suite) Figure 2...dans l'ouverture, branchez
+
+3 INSTALLATION DU SUPPORT
+
+ANTI-BASCULEMENT
+
+A Construction de mur et ...) de mani&#232;re &#224; faire entrer compl&#232;tement les supports antibasculement, tout en alignant l'avant ...</li><li><A HREF="?page=64">GE PFCS1NFCSS | Use and Care Manual - Page 64</A><BR>...©frig&#233;rateur. Installez-le sur la conduite d&#8217;eau pr&#232;s du r&#233;frig&#233;rateur. Si vous utilisez une trousse GE SmartConnect&#8482; Refrigerator Tubing, vous aurez besoin d&#8217;un tuyau additionnel (Wx08x10002) pour brancher le filtre. Ne coupez pas le tuyau ...</li><li><A HREF="?page=65">GE PFCS1NFCSS | Use and Care Manual - Page 65</A><BR>Instructions d'installation
+1 BRANCHEMENT DU R&#233;FRIG&#233;RATEUR &#192; 2 OUVREZ L'ALIMENTATION ...maison. Si vous utilisez un tuyau GE SmartConnect,&#8482; les &#233;crous sont d&#233;.... Si vous utilisez un tuyau GE SmartConnect,&#8482; ins&#233;rez l'extr&#233;...du r&#233;frig&#233;rateur entre bien dans le support anti-basculement. Le ...</li><li><A HREF="?page=66">GE PFCS1NFCSS | Use and Care Manual - Page 66</A><BR>Instructions d'installation INSTALLATION DU R&#233;FRIG&#233;RATEUR (SUITE)
+6 ENLEVEZ LA POIGN&#233;E DE PORTE DU 7 ENLEVEZ LA POIGN&#233;E DE LA PORTE DU
+
+COMPARTIMENT POUR ALIMENTS FRAIS
+
+COMPARTIMENT CONG&#233;LATION
+
+(Pour placer dans l'emplacement de l'installation ou changer le sens d'ouverture des portes...</li><li><A HREF="?page=67">GE PFCS1NFCSS | Use and Care Manual - Page 67</A><BR>Instructions d'installation
+9 FIxEZ LA POIGN&#233;E DE LA PORTE DU
+
+8 FIxEZ LA POIGN&#233;E DE LA PORTE DU
+
+COMPARTIMENT ALIMENTS FRAIS
+
+COMPARTIMENT CONG&#233;LATION
+
+Poign&#233;e en acier inoxydable : A Fixez la poign&#233;e aux fixations de A montage de la poign&#233;e et resserrez les vis de l'ensemble &#224; l'aide ...</li><li><A HREF="?page=68">GE PFCS1NFCSS | Use and Care Manual - Page 68</A><BR>Instructions d'installation INSTALLATION DU R&#233;FRIG&#233;RATEUR (SUITE)
+10 METTEZ LE R&#233;FRIG&#233;RATEUR 11 R&#233;GLEZ LES ... cong&#233;lation. C) Placez le demi bac dans les rails &#224; tiroir. Consultez les instructions de la section &#171; Compartiment cong&#233;lation &#187;. Mettez le commutateur de la machine &#224; gla&#231;ons ...</li><li><A HREF="?page=69">GE PFCS1NFCSS | Use and Care Manual - Page 69</A><BR>Instructions d'installation
+(sur certains mod&#232;les)
+
+ENL&#200;VEMENT DU TIROIR DU COMPARTIMENT CONG&#233;LATION
+Vous pouvez enlever ..., si n&#233;cessaire, pour passer par des endroits &#233;troits. Lisez ces instructions avec soin et compl&#232;tement.
+
+2 ENLEVEZ L'AVANT DU TIROIR
+
+DES GUIDES
+
+1 ENLEVEZ LE PANIER
+A ...</li><li><A HREF="?page=70">GE PFCS1NFCSS | Use and Care Manual - Page 70</A><BR>Instructions d'installation REMISE EN PLACE DU TIROIR DU COMPARTIMENT CONG&#233;LATION... DE L'AVANT
+
+DU TIROIR AUx GUIDES (SUITE)
+
+1 REMISE EN PLACE DE LA GRILLE (si... DE L'AVANT
+
+DU TIROIR AUx GUIDES
+
+A Inclinez le panier vers vous... dans le tiroir. B Abaissez le support en vous assurant que le crochet...</li><li><A HREF="?page=71">GE PFCS1NFCSS | Use and Care Manual - Page 71</A><BR>... sur les mod&#232;les en acier inoxydable. &#8226; Lisez les instructions jusqu'&#224; la fin avant de commencer. &#8226; Les pi&#232;ces ... le sens d'ouverture des portes. Ces instructions sont donn&#233;es pour faire passer &#224; ... remettre les charni&#232;res &#224; droite, suivez ces instructions en rempla&#231;ant toutes les r&#233;f&#233;...</li><li><A HREF="?page=72">GE PFCS1NFCSS | Use and Care Manual - Page 72</A><BR>Instructions d'installation CHANGEMENT DU SENS D'OUVERTURE DES PORTES (mod&#232;les de
+r&#233;frig&#233;rateurs &#224; une porte uniquement) ... compartiment aliments frais et Fixez la poign&#233;e du compartiment aliments frais pour des instructions.
+
+NOTE : Une nouvelle charni&#232;re sera requise pour le c&#244;t&#233; gauche ...</li><li><A HREF="?page=73">GE PFCS1NFCSS | Use and Care Manual - Page 73</A><BR>Instructions d'installation
+6 RE-SUSPENSION DE LA PORTE DU
+
+COMPARTIMENT R&#233;FRIG&#233;RATION
+
+7 FIxEZ LE LOGO
+Enlevez le papier adh&#233;sif protecteur et alignez les taquets de l'arri&#232;re du logo avec les trous de la porte. Faites pression sur le logo pour vous assurer qu'il colle bien &#224; la porte.
+
+...</li><li><A HREF="?page=74">GE PFCS1NFCSS | Use and Care Manual - Page 74</A><BR>Instructions d'installation ENL&#200;VEMENT DES PORTES (mod&#232;les de r&#233;frig&#233;rateurs &#224; deux portes ... sens d'ouverture des portes. &#8226; Lisez les instructions jusqu'&#224; la fin avant de commencer. &#8226; Manipulez les... ne bougez plus l'armoire. Ces instructions servent &#224; l'enl&#232;vement des portes. D&#233;...</li><li><A HREF="?page=75">GE PFCS1NFCSS | Use and Care Manual - Page 75</A><BR>Instructions d'installation
+1 ENL&#200;VEMENT DES PORTES DU 2 ENLEVEZ LA CHARNI&#200;RE DU CENTRE
+&#192; ...le haut pour lib&#233;rer l'axe de la charni&#232;re de support du haut de la porte.&#184;
+
+3 ENL&#200;VEMENT DE ... du tiroir du compartiment cong&#233;lation pour des instructions.
+
+F
+
+Enlevez le ruban et faites basculer la ...</li><li><A HREF="?page=76">GE PFCS1NFCSS | Use and Care Manual - Page 76</A><BR>Instructions d&#8217;installation REMISE EN PLACE DES PORTES (mod&#232;les de r&#233;frig&#233;rateurs &#224; deux portes uniquement)
+1 INSTALLATION DE LA CHARNI&#200;RE
+
+DU ...©LATION
+Consultez la section Remise en place du tiroir du compartiment cong&#233;lation pour des instructions.
+
+Conduite d&#8217;eau
+
+Contact &#224; 4 broches
+
+76</li><li><A HREF="?page=77">GE PFCS1NFCSS | Use and Care Manual - Page 77</A><BR>... conduites d'eau en mati&#232;re plastique GE SmartConnect&#8482; Refrigerator Tubing (Wx08x10006, Wx08x10015 et ... apr&#232;s l'installation. Les trousses GE SmartConnect&#8482; Refrigerator Tubing sont disponibles dans ... font fournis dans les trousses GE SmartConnect&#8482; Refrigerator Tubing. N'utilisez jamais ...</li><li><A HREF="?page=78">GE PFCS1NFCSS | Use and Care Manual - Page 78</A><BR>...OU &#8226; Si vous utilisez une trousse d'alimentation d'eau GE avec tuyau en mati&#232;re plastique, les garnitures n&#233;cessaires sont d&#233;... &#224; compression. Ne coupez jamais l'extr&#233;mit&#233; finie d'un tuyau de la trousse GE SmartConnect&#8482; Refrigerator Tubing.
+
+3 PERCEZ UN TROU POUR LE ROBINET
+Percez un...</li><li><A HREF="?page=79">GE PFCS1NFCSS | Use and Care Manual - Page 79</A><BR>...n'est pas autoris&#233;e au Massachusetts. Consultez votre plombier local.
+
+Pour le tuyau en mati&#232;re plastique d'une trousse GE SmartConnect&#8482; Refrigerator Tubing, ins&#233;rez l'extr&#233;mit&#233; moul&#233;e du tuyau dans le robinet d'arr&#234;t et serrez l'&#233;...</li><li><A HREF="?page=80">GE PFCS1NFCSS | Use and Care Manual - Page 80</A><BR>Mesures de s&#233;curit&#233;
+
+Bruits de fonctionnement normaux.
+Les r&#233;frig&#233;rateurs plus r&#233;cents font des bruits diff&#233;rents de ceux des anciens. Les r&#233;frig&#233;rateurs modernes pr&#233;sentent plus de fonctions et sont plus avanc&#233;s sur le plan technologique.
+
+Entendez-vous ce que j'entends ? Ces bruits ...</li><li><A HREF="?page=81">GE PFCS1NFCSS | Use and Care Manual - Page 81</A><BR>Mesures de s&#233;curit&#233;
+
+www.electromenagersge.ca
+
+Probl&#232;me
+Le moteur fonctionne pendant de longues p&#233;riodes ou d&#233;marre et et s'arr&#234;te fr&#233;quemment. s'arr&#234;te fr&#233;quemment. (Les r&#233;frig&#233;rateurs (Les r&#233;frig&#233;rateurs cong&#233;lateursleurs plus modernes et &#233;tant grands, leur moteurplus cong&#233;...</li><li><A HREF="?page=82">GE PFCS1NFCSS | Use and Care Manual - Page 82</A><BR>Mesures de s&#233;curit&#233;
+
+Avant d'appeler un r&#233;parateur...
+Probl&#232;me
+Odeur/saveur anormale des gla&#231;ons
+
+Causes possibles
+Des aliments ont transmis leur odeur/go&#251;t aux gla&#231;ons. Il faut nettoyer l'int&#233;rieur du r&#233;frig&#233;rateur.
+
+Correctifs
+&#8226; Emballez bien les aliments. &#8226; Consultez Entretien ...</li><li><A HREF="?page=83">GE PFCS1NFCSS | Use and Care Manual - Page 83</A><BR>... de r&#233;glage de compartiment r&#233;frig&#233;ration et attendez 24 heures. Si l'eau ne coule pas du distributeur pr&#232;s 24 heures, appelez le service. &#8226;Faites couler 6 litres (11&#8260;2 gallons) du distributeur pour purger le syst&#232;me. &#8226; Appelez un plombier. &#8226;Remplacez la cartouche du filtre avec une ...</li><li><A HREF="?page=84">GE PFCS1NFCSS | Use and Care Manual - Page 84</A><BR>... C'est l'alarme de porte. &#8226;Consultez les sections Fixez la poign&#233;e du compartiment aliments frais et Fixez la poign&#233;e du compartiment cong&#233;lation pour des instructions d&#233;taill&#233;es. &#8226;Fermez la porte.
+
+La poign&#233;e est l&#226;che/ Il y a un espace vide pour la poign&#233;e
+
+Installation
+
+Son du r&#233;...</li><li><A HREF="?page=85">GE PFCS1NFCSS | Use and Care Manual - Page 85</A><BR>Mesures de s&#233;curit&#233;
+www.electromenagersge.ca
+
+Fonctionnement
+
+Installation
+
+Conseils de d&#233;pannage
+
+Soutien au consommateur
+
+Notes.
+
+85</li><li><A HREF="?page=86">GE PFCS1NFCSS | Use and Care Manual - Page 86</A><BR>...partir de la date d'achat) GE Profile : Dix (10) ans GE et toutes autre ... au choix de Mabe GE Profile : Dix (10) ans GE et toutes autre ...oeuvre
+
+GARANTIE DU CLIENT
+
+Compresseur
+
+GE Profile : Cinq (5) ans GE et toutes autre marques : Un (1) an GE Profile : Cinq (5) ans GE et toutes autre marques : Un...</li><li><A HREF="?page=87">GE PFCS1NFCSS | Use and Care Manual - Page 87</A><BR>... &#224; la performance
+Cartouche MWF du syst&#232;me de Filtration d'eau GE SmartWater Ce syst&#232;me a &#233;t&#233; essay&#233; selon les normes NSF/...de filtration m&#233;canique R&#233;duction de turbidit&#233; R&#233;duction de spores et asbestos
+
+NSF
+&#174;
+
+Fabriqu&#233;e pour : General Electric Company, Louisville, KY 40225 EPA EST. No. ...</li><li><A HREF="?page=88">GE PFCS1NFCSS | Use and Care Manual - Page 88</A><BR>.... Site Web appareils &#233;lectrom&#233;nagers GE
+www.electromenagersge.ca
+Vous avez une ... de l'ann&#233;e.
+
+Service de r&#233;parations
+Service de r&#233;parations GE est tout ... de conception r&#233;aliste
+Sur demande, GE peut fournir une brochure sur ... rabais substantiel. Ainsi le service apr&#232;s-vente GE sera toujours l&#224;...</li><li><A HREF="?page=89">GE PFCS1NFCSS | Use and Care Manual - Page 89</A><BR>Informaci&#243;n de seguridad ...90, 91 Instrucciones de operaci&#243;n
+
+Seguridad
+
+Caracter&#237;sticas adicionales...96 C&#243;mo reemplazar las bombillas de luz ...102 Congelador...98 Cuidado y limpieza del refrigerador ...100, 101 El dispensador de agua ...99 El filtro de agua...94 Gavetas preservadoras y ...</li><li><A HREF="?page=90">GE PFCS1NFCSS | Use and Care Manual - Page 90</A><BR>... SEGURIDAD. LEA PRIMERO TODAS LAS INSTRUCCIONES.
+Seguridad
+
+&#161;ADVERTENCIA!
+Use este aparato s&#243;lo para los fines que se describen en este Manual del propietario.
+
+PRECAUCIONES DE SEGURIDAD
+Cuando use electrodom&#233;sticos, siga las precauciones b&#225;sicas de seguridad, incluyendo las siguientes:
+n Antes ...</li><li><A HREF="?page=91">GE PFCS1NFCSS | Use and Care Manual - Page 91</A><BR>GEAppliances.com
+
+Seguridad
+
+&#161;ADVERTENCIA!
+COMO CONECTAR LA ELECTRICIDAD
+Bajo ninguna circunstancia debe cortar o quitar la tercera punta (tierra) de la clavija. Para su seguridad personal, este aparato deber&#225; conectarse debidamente a tierra.
+El cable el&#233;ctrico de este aparato est&#225; equipado con...</li><li><A HREF="?page=92">GE PFCS1NFCSS | Use and Care Manual - Page 92</A><BR>Los controles con niveles de temperaturas. (para otros modelos, vea la p&#225;gina siguiente)
+Seguridad
+
+(en algunos modelos)
+
+Operaci&#243;n
+
+(en algunos modelos)
+
+Instalaci&#243;n
+
+NOTA: El refrigerador se env&#237;a con una pel&#237;cula de protecci&#243;n que cubre los controles de la temperatura. Si esta pel&#237;cula no...</li><li><A HREF="?page=93">GE PFCS1NFCSS | Use and Care Manual - Page 93</A><BR>... y apagado a altas velocidades, seg&#250;n sea necesario por ocho horas. El compresor continuar&#225; funcionando hasta que el compartimiento del refrigerador se refrigere a aproximadamente 34&#186; F (1&#186; C), luego har&#225; el ciclo de encendido y apagado para mantener este ajuste. Despu&#233;s de 8 horas, o si el ...</li><li><A HREF="?page=94">GE PFCS1NFCSS | Use and Care Manual - Page 94</A><BR>...³n de derivaci&#243;n del filtro. Filtros de recambio: Para pedir cartuchos adicionales en los Estados Unidos, visite nuestro sitio Web, GEAppliances.com, o llame a GE para partes y accesorios al 800.626.2002. Modelo de filtro MWF
+
+Reemplazar el filtro
+Hay una luz indicadora de reemplazo del cartucho ...</li><li><A HREF="?page=95">GE PFCS1NFCSS | Use and Care Manual - Page 95</A><BR>Sobre los estantes y compartimientos.
+No todas las caracter&#237;sticas est&#225;n presentes en todos los modelos.
+
+GEAppliances.com
+
+Seguridad
+
+Reorganizaci&#243;n de los estantes
+Los estantes en el compartimiento del refrigerador son ajustables.
+
+Compartimiento del refrigerador
+Para quitar: Quite todos los ...</li><li><A HREF="?page=96">GE PFCS1NFCSS | Use and Care Manual - Page 96</A><BR>Sobre los estantes y compartimientos.
+Seguridad
+Compartimientos ajustables en la puerta
+Los compartimientos ajustables pueden llevarse f&#225;cilmente del refrigerador al &#225;rea de trabajo. Para retirarlos: Levante el estante recto y luego h&#225;lelo. Para reemplazar o cambiar de lugar: Deslice el ...</li><li><A HREF="?page=97">GE PFCS1NFCSS | Use and Care Manual - Page 97</A><BR>Sobre las gavetas preservadoras y contenedores.
+No todas las caracter&#237;sticas est&#225;n presentes en todos los modelos.
+
+GEAppliances.com
+
+Seguridad
+
+Gaveta preservadora de frutas y vegetales
+El exceso de agua que pueda acumularse al fondo de las gavetas debe retirarse y se deben limpiar las gavetas....</li><li><A HREF="?page=98">GE PFCS1NFCSS | Use and Care Manual - Page 98</A><BR>Sobre el congelador.
+Seguridad
+No todas las caracter&#237;sticas est&#225;n presentes en todos los modelos.
+
+Estantes y canastas del congelador
+Un estante por encima del recipente para hielo Una canasta de ancho medio Una canasta profunda de ancho completo con divisor
+El aspecto y las caracter&#237;sticas ...</li><li><A HREF="?page=99">GE PFCS1NFCSS | Use and Care Manual - Page 99</A><BR>Sobre la m&#225;quina de hielo autom&#225;tica.
+Interruptor de corriente M&#225;quina de hielos
+
+GEAppliances.com
+
+Seguridad
+
+Un refrigerador recientemente instalado puede tomar entre 12 y 24 horas para empezar a hacer hielo.
+
+M&#225;quina de hielo autom&#225;tica
+(en algunos modelos)
+
+Luz verde de la corriente
+
+Brazo...</li><li><A HREF="?page=100">GE PFCS1NFCSS | Use and Care Manual - Page 100</A><BR>Cuidado y limpieza del refrigerador.
+Seguridad
+Limpiar el exterior
+Las manijas de la puerta y los ornamentos. Se limpian con un pa&#241;o humedecido con una soluci&#243;n de detergente suave y agua. Seque con un pa&#241;o suave. No use cera en las manijas de la puerta ni en los ornamentos. Mantenga limpio el ...</li><li><A HREF="?page=101">GE PFCS1NFCSS | Use and Care Manual - Page 101</A><BR>GEAppliances.com
+
+Seguridad
+
+Atr&#225;s del refrigerador
+Se deber&#225; tener cuidado al retirar el refrigerador de la pared. Todos los tipos de recubrimiento de pisos se pueden da&#241;ar, sobre todo los recubrimientos acojinados y los que tienen superficies repujadas. Eleve las patas niveladoras ubicadas en ...</li><li><A HREF="?page=102">GE PFCS1NFCSS | Use and Care Manual - Page 102</A><BR>... mismo o de inferior voltaje, reemplace el protector. Conecte de nuevo el refrigerador. NOTA: Las bombillas del artefacto pueden solicitarse en Piezas y Accesorios de GE, 800.626.2002.
+
+Operaci&#243;n
+
+Luces LED del refrigerador (en algunos modelos)
+Un t&#233;cnico autorizado debe reemplazar la luz LED.
+
+...</li><li><A HREF="?page=103">GE PFCS1NFCSS | Use and Care Manual - Page 103</A><BR>... con equipos de recorte que le permiten instalar paneles de puerta. Usted puede solicitar paneles de decoraci&#243;n pre-cortados negros u blancos en Piezas y Accesorios de GE, 800.626.2002, o puede agregar paneles de madera para hacer juego con los gabinetes de su cocina.
+
+Paneles de menos de 1/4 &#8243; ...</li><li><A HREF="?page=104">GE PFCS1NFCSS | Use and Care Manual - Page 104</A><BR>Equipos de recorte y paneles de decoraci&#243;n.
+Seguridad
+3/4 &#8243; (19 mm) o panel elevado
+Puede utilizarse un dise&#241;o de panel elevado atornillado o pegado a un soporte de un grosor de 1/4&#8243; (6 mm), o una placa fresada de 3/4&#8243; (19 mm). La parte elevada del panel debe fabricarse para permitir ...</li><li><A HREF="?page=105">GE PFCS1NFCSS | Use and Care Manual - Page 105</A><BR>...falla del producto debido a una instalaci&#243;n inadecuada no est&#225; cubierta por la garant&#237;a.
+
+Refrigerador
+Modelos 21 y 25
+
+&#191;Preguntas? Llame al 800.GE.CARES (800.432.2737) o bien visite nuestra p&#225;gina Web: GEAppliances.com
+
+MATERIALES QUE NECESITA (no incluidos)
+
+IMPORTANTE
+
+IMPORTANTE - Observe...</li><li><A HREF="?page=106">GE PFCS1NFCSS | Use and Care Manual - Page 106</A><BR>... la pared trasera, dentro de W, alineada con la ubicaci&#243;n deseada del lado derecho del refrigerador (ver Figura 1).
+
+Figura 1 - Perspectiva general de la instalaci&#243;n
+Piso - Hormig&#243;n (2 orificios)
+Piso - Madera (2 orificios)
+
+2 orificios en la pared Soporte de piso a instalar Orificios en la...</li><li><A HREF="?page=107">GE PFCS1NFCSS | Use and Care Manual - Page 107</A><BR>Instrucciones para la instalaci&#243;n
+2 C&#211;MO UBICAR EL SOPORTE
+
+DE PISO ANTI-VOLCADURAS (cont.) Figura 2 - Ubicaciones de tornillos aceptables
+Instalaci&#243;n preferida - Madera Instalaci&#243;n preferida - Hormig&#243;n
+
+M&#237;nimo aceptable N&#176;1 - Soporte de placa de pared
+
+M&#237;nimo aceptable N&#176;2 - ...</li><li><A HREF="?page=108">GE PFCS1NFCSS | Use and Care Manual - Page 108</A><BR>... del refrigerador. Si usted est&#225; usando un kit de tuber&#237;a de refrigeraci&#243;n GE SmartConnect,&#8482; usted necesitar&#225; una tuber&#237;a adicional (WX08X10002) para conectar... agua fr&#237;a de la casa. Si se encuentra usando tuber&#237;as de GE SmartConnect,&#8482; las tuercas est&#225;n ya ensambladas a la tuber&#237;a.
+
+(los ...</li><li><A HREF="?page=109">GE PFCS1NFCSS | Use and Care Manual - Page 109</A><BR>...en la parte posterior del refrigerador, hasta donde sea posible. Mientras sostiene la tuber&#237;a, apriete el accesorio. Si se encuentra usando tuber&#237;as de GE SmartConnect,&#8482; inserte el extremo moldeado de la tuber&#237;a en la conexi&#243;n del refrigerador en la parte posterior del refrigerador, y apriete ...</li><li><A HREF="?page=110">GE PFCS1NFCSS | Use and Care Manual - Page 110</A><BR>Instrucciones para la instalaci&#243;n INSTALACI&#211;N DEL REFRIGERADOR (cont.)
+6 RETIRE LA MANIJA DE LA PUERTA DE 7 RETIRE LA MANIJA DE LA PUERTA DEL
+
+ALIMENTOS FRESCOS
+
+CONGELADOR
+
+(Para la colocaci&#243;n en el lugar de instalaci&#243;n o la inversi&#243;n de las manijas - en algunos modelos)
+Manija de acero ...</li><li><A HREF="?page=111">GE PFCS1NFCSS | Use and Care Manual - Page 111</A><BR>Instrucciones para la instalaci&#243;n
+9 SUJETE LA MANIJA DE LA PUERTA DEL
+
+8 SUJETE LA MANIJA DE LA PUERTA DE
+
+ALIMENTOS FRESCOS
+
+CONGELADOR
+
+Manija de acero inoxidable: A Sujete la manija a los tornillos de montaje y ajuste los tornillos de fijaci&#243;n con una llave Allen de 3/32&#8243;. NOTA: Para modelos...</li><li><A HREF="?page=112">GE PFCS1NFCSS | Use and Care Manual - Page 112</A><BR>Instrucciones para la instalaci&#243;n INSTALACI&#211;N DEL REFRIGERADOR (cont.)
+10 C&#211;MO NIVELAR EL REFRIGERADOR
+Las patas niveladoras tienen dos prop&#243;sitos: 1) Las patas niveladoras se ajustan para que el refrigerador est&#233; colocado firmemente en el piso y no tambalee. 2) Las patas niveladoras sirven ...</li><li><A HREF="?page=113">GE PFCS1NFCSS | Use and Care Manual - Page 113</A><BR>Instrucciones para la instalaci&#243;n C&#211;MO RETIRAR LA GAVETA DEL CONGELADOR
+(en algunos modelos)
+Si es necesario, es posible retirar la gaveta del congelador para que el refrigerador quepa en &#225;reas estrechas. Lea estas instrucciones completa y cuidadosamente.
+
+2 RETIRE EL FRENTE DE LA GAVETA
+
+DESDE ...</li><li><A HREF="?page=114">GE PFCS1NFCSS | Use and Care Manual - Page 114</A><BR>Instrucciones para la instalaci&#243;n C&#211;MO REEMPLAZAR LA GAVETA DEL CONGELADOR
+(en algunos modelos)
+Es posible que sean necesarias dos personas para completar este procedimiento.
+
+2 UNA Y ASEGURE EL FRENTE DE
+
+LA GAVETA A LAS CORREDERAS (CONT.)
+
+1 REEMPLACE LA PARRILLA DE LA BASE (si se retir&#243; antes...</li><li><A HREF="?page=115">GE PFCS1NFCSS | Use and Care Manual - Page 115</A><BR>Instrucciones para la instalaci&#243;n C&#211;MO INVERTIR EL VAIV&#201;N DE LA PUERTA
+(Modelos de refrigerador de una sola puerta &#250;nicamente) NOTAS IMPORTANTES
+Al invertir el vaiv&#233;n de la puerta: NOTA: El vaiv&#233;n de la puerta no es reversible en modelos de acero inoxidable. &#8226; Lea las instrucciones ...</li><li><A HREF="?page=116">GE PFCS1NFCSS | Use and Care Manual - Page 116</A><BR>Instrucciones para la instalaci&#243;n C&#211;MO INVERTIR EL VAIV&#201;N DE LA PUERTA (cont.)
+2 RETIRE LA BISAGRA CENTRAL
+Mediante una llave de cubo de 5/16&#8243;, quite los pernos que sujetan la bisagra central al gabinete. Coloque la bisagra y los pernos a un lado.
+
+4
+A B C
+
+TRASLADE EL FRENO DE LA PUERTA DEL ...</li><li><A HREF="?page=117">GE PFCS1NFCSS | Use and Care Manual - Page 117</A><BR>Instrucciones para la instalaci&#243;n
+6 VUELVA A COLGAR LA PUERTA DEL 7 INSTALE LA INSIGNIA DEL LOGO
+Quite el papel que cubre el adhesivo y alinee los pernos de la parte trasera de la insignia con los orificios de la puerta. Aplique presi&#243;n a la insignia para garantizar que se haya pegado a la puerta...</li><li><A HREF="?page=118">GE PFCS1NFCSS | Use and Care Manual - Page 118</A><BR>Instrucciones para la instalaci&#243;n C&#211;MO RETIRAR LAS PUERTAS
+NOTAS IMPORTANTES
+NOTA: El vaiv&#233;n de la puerta no es reversible. &#8226; Lea las instrucciones completas antes de empezar. &#8226; Manipule las partes con cuidado para evitar rayar la pintura. &#8226; Coloque los tornillos seg&#250;n las partes a las ...</li><li><A HREF="?page=119">GE PFCS1NFCSS | Use and Care Manual - Page 119</A><BR>Instrucciones para la instalaci&#243;n
+
+1 RETIRE LA PUERTA
+
+DEL REFRIGERADOR (cont.)
+
+2 C&#211;MO QUITAR LA BISAGRA CENTRAL
+Mediante una llave de cubo de 5/16&#8243;, quite los pernos que sujetan la bisagra central al gabinete. Coloque la bisagra y los pernos a un lado.
+
+D Saque la tapa de la bisagra en la ...</li><li><A HREF="?page=120">GE PFCS1NFCSS | Use and Care Manual - Page 120</A><BR>Instrucciones para la instalaci&#243;n C&#211;MO VOLVER A COLOCAR LAS PUERTAS
+(Modelos de refrigerador de doble puerta &#250;nicamente)
+1 INSTALE LA BISAGRA CENTRAL
+Instale la bisagra central en cada lado.
+
+2 VUELVA A COLGAR LAS PUERTAS DEL
+
+REFRIGERADOR (CONT.)
+
+D En las puertas de la derecha, pase los cables...</li><li><A HREF="?page=121">GE PFCS1NFCSS | Use and Care Manual - Page 121</A><BR>Instrucciones para la instalaci&#243;n
+
+4 C&#211;MO ALINEAR LAS PUERTAS DOBLES
+Si la parte superior de las puertas est&#225; desigual, primero intente levantar la puerta m&#225;s baja girando la pata niveladora en el mismo costado de la puerta hasta que las puertas est&#233;n niveladas. Si la unidad permanece ...</li><li><A HREF="?page=122">GE PFCS1NFCSS | Use and Care Manual - Page 122</A><BR>... las tuber&#237;as para el refrigerador SmartConnect&#8482; de GE (WX08X10006, WX08X10015 y WX08X10025). Al conectar... de tuber&#237;a para el refrigerador SmartConnect &#8482; de GE est&#225;n disponibles en las siguientes longitudes: 6&#2862;. de tuber&#237;a para el refrigerador SmartConnect &#8482; de GE. No use ninguna otra tuber&#110;..</li><li><A HREF="?page=123">GE PFCS1NFCSS | Use and Care Manual - Page 123</A><BR>... Si est&#225; usando un kit de tuber&#237;a para el refrigerador SmartConnect &#8482; de GE, los accesorios necesarios ya vienen preinstalados en la tuber&#237;a.
+
+... No corte el extremo formado de la tuber&#237;a para el refrigerador SmartConnect &#8482; de GE.
+
+Seleccione una ubicaci&#243;n para la v&#225;lvula que sea f&#225;cilmente...</li><li><A HREF="?page=124">GE PFCS1NFCSS | Use and Care Manual - Page 124</A><BR>... en la v&#225;lvula. Apriete la tuerca de compresi&#243;n firmemente. Para tuber&#237;a de pl&#225;stico de un kit de tuber&#237;a para el refrigerador SmartConnect &#8482; de GE, inserte el extremo moldeado de la tuber&#237;a en la v&#225;lvula de apagado y apriete la tuerca de compresi&#243;n hasta que est&#233; firmemente apretada a ...</li><li><A HREF="?page=125">GE PFCS1NFCSS | Use and Care Manual - Page 125</A><BR>Sonidos normales de la operaci&#243;n.
+
+GEAppliances.com
+
+Seguridad
+
+Los refrigeradores m&#225;s nuevos producen sonidos diferentes a los modelos m&#225;s antiguos. Los refrigeradores modernos tienen m&#225;s funciones y usan tecnolog&#237;a m&#225;s reciente.
+
+&#191;Usted escucha lo que yo escucho? Estos sonidos son normales...</li><li><A HREF="?page=126">GE PFCS1NFCSS | Use and Care Manual - Page 126</A><BR>Antes de solicitar un servicio...
+Seguridad
+Problema
+Vibraciones o sacudidas (una vibraci&#243;n ligera es normal) El motor opera durante per&#237;odos prolongados o se arranca y se para con frecuencia. (Refrigeradores modernos con m&#225;s espacio de almacenamiento y un congelador m&#225;s grande requieren m&#225;s ...</li><li><A HREF="?page=127">GE PFCS1NFCSS | Use and Care Manual - Page 127</A><BR>GEAppliances.com
+
+Seguridad
+
+Problema
+Sonido de zumbido frecuente
+
+Causas Posibles
+
+Qu&#233; hacer
+
+El interruptor del suministro &#8226; Coloque el interruptor en la posici&#243;n 0 (apagado). el&#233;ctrico de la m&#225;quina de Mantenerlo en la posici&#243;n I (encendido) da&#241;ar&#225; la hielos est&#225; en la posici&#243;n v&#225;...</li><li><A HREF="?page=128">GE PFCS1NFCSS | Use and Care Manual - Page 128</A><BR>Antes de solicitar un servicio...
+Seguridad
+Problema
+La puerta/gaveta no se cierra sola La puerta/gaveta del congelador se abre cuando la puerta del refrigerador est&#225; cerrada El agua tiene un sabor/olor malo El agua en el primer vaso est&#225; tibia
+
+Causas Posibles
+Las patas niveladoras necesitan ...</li><li><A HREF="?page=129">GE PFCS1NFCSS | Use and Care Manual - Page 129</A><BR>GEAppliances.com
+
+Seguridad
+
+Problema
+La pantalla muestra La luz del indicador del filtro de agua cambi&#243; de color La luz del indicador del filtro de agua contin&#250;a roja a&#250;n despu&#233;s de haber cambiado el filtro de agua La luz del indicador del filtro de agua no est&#225; encendida
+
+Causas Posibles
+La ...</li><li><A HREF="?page=130">GE PFCS1NFCSS | Use and Care Manual - Page 130</A><BR>... costo, un cartucho de filtro de agua de repuesto.
+
+MODELOS GE y GE PROFILE:
+
+Operaci&#243;n
+
+MODELOS DE GE PROFILE SOLAMENTE: Cinco a&#241;os A partir de la fecha de la compra original Cualquier parte...oficina del Attorney General en su localidad.
+
+130
+
+Garante: General Electric Company. Louisville,...</li><li><A HREF="?page=131">GE PFCS1NFCSS | Use and Care Manual - Page 131</A><BR>Hoja de Datos de Funcionamiento Sistema de Filtraci&#243;n GE SmartWater Cartucho MWF Este sistema se ha sometido a las ... y toxafeno Unidad de filtrado mec&#225;nico Reducci&#243;n de turbidez Reducci&#243;n de quistes y asbestos
+
+NSF
+
+&#174;
+
+Hecho por General Electric, Appliance Park, Louisville, KY 40225 EPA EST. No....</li><li><A HREF="?page=132">GE PFCS1NFCSS | Use and Care Manual - Page 132</A><BR>Servicio al consumidor Solucionar problemas Instalaci&#243;n Operaci&#243;n Seguridad
+
+132
+
+Notas.</li><li><A HREF="?page=133">GE PFCS1NFCSS | Use and Care Manual - Page 133</A><BR>Seguridad
+GEAppliances.com
+
+Operaci&#243;n
+
+Instalaci&#243;n
+
+Solucionar problemas Servicio al consumidor
+
+Notas.
+
+133</li><li><A HREF="?page=134">GE PFCS1NFCSS | Use and Care Manual - Page 134</A><BR>Servicio al consumidor Solucionar problemas Instalaci&#243;n Operaci&#243;n Seguridad
+
+134
+
+Notas.</li><li><A HREF="?page=135">GE PFCS1NFCSS | Use and Care Manual - Page 135</A><BR>... mentales. Para m&#225;s detalles cobre las aplicaciones de GE Dise&#241;o Universal, incluyendo ideas de dise&#241;o ....2224) durante horas normales de oficina. GE Consumer Home Services estar&#225; a&#250;n ah&#237; ...³ngase en contacto con nosotros
+General Manager, Customer Relations GE Appliances, Appliance Park Louisville...</li><li><A HREF="?page=136">GE PFCS1NFCSS | Use and Care Manual - Page 136</A><BR>....2224 during normal business hours. GE Consumer Home Services will still be there after your ... GEAppliances.com
+
+If you are not satisfied with the service you receive from GE, contact us on our Website ... your phone number, or write to: General Manager, Customer Relations GE Appliances, Appliance Park ...</li></ul></div>
+        
+</DIV>
+
+<DIV CLASS="clear"></DIV>
+
+<HR CLASS="standardRule">
+    
+
+    <DIV STYLE="width:100%;margin-top:15px;">
+
+        <DIV ID="viewer-ad-top">
+    <P>            
+            
+        
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- MO - 728x90 - image/text -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-8649773808320969"
+     data-ad-slot="1797272752"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <BR>
+
+</DIV>
+
+        <DIV ID="listingSearchBox" style="float:left;width:780px;">
+
+            <FORM METHOD="get">
+
+                <DIV CLASS="field" STYLE="width:550px;">
+                    <INPUT TYPE="TEXT" ID="search" NAME="search" CLASS="textfield" style="width:550px;" VALUE="Search this manual..." onFocus="if (this.value == 'Search this manual...') { this.value = '' }">
+                    <BR>
+                    Type your new search above
+                </DIV>
+
+                <DIV CLASS="button" STYLE="width:165px;">
+                    <INPUT TYPE="IMAGE" SRC="/images/button_product_search_button.gif">
+                </DIV>
+
+                <DIV CLASS="clear"></DIV>
+
+            </FORM>
+
+        </DIV>
+
+        <DIV STYLE="float:left;">
+            <A HREF="/m/General%20Electric/PFCS1NFCSS/Download/322038"><IMG SRC="/images/manual_download_free.gif"></A>
+        </DIV>
+
+        <DIV CLASS="clear"></DIV>
+
+    </DIV>
+
+    
+        <DIV ID="viewer-ad-right">
+    
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- MO - 160x600 - image/text -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:600px"
+     data-ad-client="ca-pub-8649773808320969"
+     data-ad-slot="7948926397"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </DIV>
+                <DIV ID="viewer">
+
+            <DIV ID="viewer-thumbs">
+
+            
+                <DIV ID="viewer-page-1" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(1);"><IMG SRC="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_1_c8da96ca.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_1_c8da96ca.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-2" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(2);"><IMG SRC="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_2_bfb051fb.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_2_bfb051fb.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-3" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(3);"><IMG SRC="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_3_245ba3b8.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_3_245ba3b8.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-4" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(4);"><IMG SRC="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_4_fecada02.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_4_fecada02.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-5" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(5);"><IMG SRC="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_5_331d0f48.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_5_331d0f48.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-6" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(6);"><IMG SRC="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_6_cbe4ad62.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_6_cbe4ad62.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-7" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(7);"><IMG SRC="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_7_026a0e80.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_7_026a0e80.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-8" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(8);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_8_2ead292e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-9" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(9);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_9_014feed9.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-10" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(10);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_10_1d4acdc7.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-11" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(11);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_11_71eb34a6.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-12" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(12);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_12_6eea3b3a.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-13" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(13);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_13_8fe0a505.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-14" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(14);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_14_51d07d6c.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-15" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(15);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_15_73e33621.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-16" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(16);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_16_7598a8b7.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-17" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(17);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_17_dac32770.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-18" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(18);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_18_9fa128f9.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-19" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(19);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_19_2da81b00.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-20" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(20);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_20_ea032764.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-21" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(21);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_21_14af5b9e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-22" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(22);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_22_755e9bf5.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-23" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(23);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_23_c97f1cf9.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-24" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(24);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_24_aece0cb8.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-25" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(25);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_25_cb1001b1.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-26" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(26);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_26_043be07c.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-27" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(27);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_27_7c629d34.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-28" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(28);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_28_8e3d11b4.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-29" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(29);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_29_c641a4b1.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-30" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(30);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_30_774fb5ba.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-31" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(31);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_31_8378cb7b.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-32" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(32);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_32_e4d94e62.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-33" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(33);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_33_37aca79d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-34" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(34);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_34_bcddef37.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-35" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(35);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_35_aace4490.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-36" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(36);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_36_3afefa36.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-37" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(37);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_37_f0c8f5b1.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-38" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(38);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_38_51e234b8.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-39" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(39);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_39_334580ec.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-40" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(40);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_40_48015991.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-41" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(41);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_41_962324fc.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-42" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(42);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_42_44172b8c.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-43" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(43);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_43_e318e1d5.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-44" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(44);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_44_d62c16c1.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-45" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(45);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_45_a65c6775.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-46" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(46);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_46_8ff664d3.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-47" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(47);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_47_b5e9de8a.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-48" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(48);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_48_15e22e3c.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-49" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(49);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_49_f4fa99de.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-50" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(50);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_50_0ada3f47.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-51" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(51);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_51_90cbb539.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-52" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(52);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_52_5cacf35b.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-53" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(53);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_53_90c42f27.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-54" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(54);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_54_25f65b57.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-55" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(55);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_55_3363bbb4.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-56" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(56);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_56_4d645f45.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-57" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(57);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_57_f18c9fff.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-58" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(58);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_58_faebf861.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-59" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(59);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_59_1427bef4.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-60" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(60);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_60_4d79a2a0.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-61" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(61);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_61_93fee77d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-62" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(62);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_62_78f8c3f8.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-63" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(63);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_63_4167e462.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-64" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(64);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_64_15cf9327.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-65" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(65);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_65_58360d8e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-66" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(66);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_66_142e5c9d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-67" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(67);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_67_1838778a.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-68" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(68);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_68_36b7b7b5.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-69" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(69);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_69_a5bb502f.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-70" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(70);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_70_b10d872e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-71" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(71);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_71_fb56addc.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-72" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(72);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_72_8cb12613.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-73" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(73);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_73_98a0eb98.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-74" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(74);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_74_67b31b7e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-75" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(75);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_75_82b09772.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-76" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(76);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_76_db421437.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-77" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(77);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_77_76b2541d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-78" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(78);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_78_f8fa473e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-79" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(79);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_79_c2161651.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-80" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(80);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_80_48e78908.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-81" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(81);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_81_d7612ba5.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-82" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(82);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_82_28e15003.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-83" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(83);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_83_53898ebf.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-84" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(84);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_84_8c362030.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-85" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(85);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_85_9f2f2ea5.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-86" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(86);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_86_92f281fc.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-87" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(87);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_87_fb4e33a7.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-88" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(88);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_88_e195ac4d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-89" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(89);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_89_9fc4dc91.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-90" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(90);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_90_f0b5e4fa.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-91" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(91);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_91_2cefd4be.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-92" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(92);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_92_2dc52992.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-93" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(93);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_93_4ce4d250.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-94" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(94);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_94_bad97123.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-95" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(95);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_95_90b29946.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-96" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(96);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_96_2e64139a.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-97" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(97);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_97_06cbfaa3.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-98" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(98);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_98_4b23e80a.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-99" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(99);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_99_9ee2fbd1.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-100" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(100);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_100_810bbbea.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-101" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(101);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_101_4d0f739f.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-102" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(102);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_102_4db4dfae.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-103" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(103);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_103_c18a8983.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-104" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(104);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_104_d12ef400.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-105" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(105);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_105_3bdd1ffd.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-106" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(106);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_106_10fbf3c0.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-107" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(107);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_107_1cc29b50.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-108" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(108);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_108_ec8a8350.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-109" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(109);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_109_ad4984f4.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-110" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(110);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_110_f2db6cf7.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-111" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(111);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_111_757d54de.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-112" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(112);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_112_777e4574.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-113" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(113);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_113_cfc904c6.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-114" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(114);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_114_b1107109.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-115" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(115);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_115_988b173d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-116" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(116);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_116_9422fcf5.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-117" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(117);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_117_bf9afb4d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-118" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(118);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_118_8483f288.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-119" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(119);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_119_c3702f8e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-120" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(120);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_120_01c7d709.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-121" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(121);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_121_48c91a67.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-122" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(122);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_122_8f3e644f.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-123" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(123);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_123_c8844d2e.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-124" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(124);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_124_e65dbbaf.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-125" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(125);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_125_64570dbc.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-126" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(126);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_126_f2f70f96.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-127" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(127);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_127_f669922f.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-128" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(128);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_128_4708fe73.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-129" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(129);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_129_00831ccf.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-130" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(130);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_130_5fda0652.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-131" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(131);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_131_7c9f53ad.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-132" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(132);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_132_246bdcd7.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-133" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(133);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_133_d6577413.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-134" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(134);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_134_bb2c3038.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-135" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(135);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_135_15bfeb06.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+                <DIV ID="viewer-page-136" CLASS="viewer-page">
+
+                                        <A HREF="javascript:void viewer_load_page(136);"><IMG SRC="/images/manualpage.png" realsrc="/manualimages/c/m/general-electric-cfcp1nizss-use-care-manual-343ea92_136_947b434d.png" CLASS="viewer-thumb"></A>
+
+                </DIV>
+
+                
+            </DIV>
+            <DIV ID="viewer-swf">
+
+                <CENTER>
+                    <P>
+                    <B>The manual viewer requires the flash plugin to be installed and enabled.
+                    <BR>
+                    To view this page ensure that Adobe Flash Player version 10 or greater is installed.</B>
+                    </P>
+                    <SCRIPT TYPE="text/javascript">
+                    var pageHost = ((document.location.protocol == "https:") ? "https://" :    "http://");
+                    document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='"
+                    + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" );
+                    </SCRIPT>
+                </CENTER>                
+
+                <a href="/manualswf.php?id=174595&manual_type=product&d=f2a5694a7624d9d8a7148067ad91ec54">GE PFCS1NFCSS Manual</a>
+
+            </DIV>
+
+            <DIV CLASS="clear"></DIV>
+
+        </DIV>
+        <DIV ID="viewer-ad-bottom">
+    <P>            
+            
+        
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- MO - 728x90 - image/text -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-8649773808320969"
+     data-ad-slot="1797272752"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+    <BR>
+
+</DIV>                
+
+    
+        </DIV>        
+        
+    </DIV>
+    
+</DIV>
+
+<DIV ID="footer">
+
+    <DIV CLASS="wrapper">
+    
+        <DIV ID="footerLeft">
+
+            All contents &copy; copyright 2009 - 2015, ManualOwl.com
+            <BR>
+            <SMALL>Trademarks and brands are the property of their respective owners.</SMALL>
+        
+        </DIV>
+
+        <DIV ID="footerRight">
+
+            <A HREF="/index.php">Home</A> |
+            <A HREF="/account_home.php">My Manuals</A> |
+            <A HREF="/company_index.php">Manual Index</A> |
+            <A HREF="/manual_categories.php">Manual Categories</A> |
+            <A HREF="/about_us.php">About Us</A> |
+            <A HREF="/contact_us.php">Contact Us</A> |
+            <A HREF="/privacy_policy.php">Privacy</A>
+        
+        </DIV>
+
+        <DIV CLASS="clear"></DIV>
+        
+    </DIV>
+    
+</DIV>
+
+<!-- GOOGLE TRACKING -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-23614706-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#oiq_container').append('<iframe id="owneriqframe" borderframe="0" scrolling="no" width="0" height="0" style="border:0px;" />');
+    $('#owneriqframe').attr('src', 'https://owneriq.terabytemedia.com/owneriq.php?s=manowl.js&b=GE&c=Refrigerators&p=PFCS1NFCSS'); 
+});
+</script>
+<div id="oiq_container"></div>
+
+<!-- END GOOGLE TRACKING -->
+
+<SCRIPT TYPE="text/javascript" src="https://apis.google.com/js/plusone.js"></SCRIPT>
+
+</BODY>
+</HTML>
